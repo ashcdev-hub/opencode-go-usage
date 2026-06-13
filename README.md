@@ -4,8 +4,6 @@
 
 A lightweight macOS menu bar app that displays your [OpenCode GO](https://opencode.ai) subscription usage in real time. Rolling, weekly, and monthly limits with progress bars, no more checking a browser tab to see when your limits reset.
 
-![App Screenshot](docs/screenshot.png)
-
 ## Features
 
 - **Menu bar indicator** — shows a "GO" status item with a chart icon in your menu bar
