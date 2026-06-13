@@ -36,17 +36,35 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         guard let button = statusItem.button else { return }
 
         button.title = "GO "
-
-        if let img = NSImage(systemSymbolName: "chart.bar.fill", accessibilityDescription: "GO Usage") {
-            button.image = img
-        } else {
-            button.image = makeFallbackImage()
-        }
-
-        button.imagePosition = .imageLeading
+        button.image = makeHorizontalBarsImage()
+        button.imagePosition = .imageTrailing
         button.target = self
         button.action = #selector(statusItemClicked(_:))
         button.toolTip = "OpenCode GO Usage"
+    }
+
+    private func makeHorizontalBarsImage() -> NSImage {
+        let size = NSSize(width: 16, height: 14)
+        let image = NSImage(size: size)
+        image.lockFocus()
+        NSColor.controlTextColor.setFill()
+
+        let barX: CGFloat = 0
+        let barWidths: [CGFloat] = [6, 10, 14]
+        let barHeight: CGFloat = 2.5
+        let spacing: CGFloat = 1.5
+        let startY: CGFloat = 1
+
+        for (i, w) in barWidths.enumerated() {
+            let y = startY + CGFloat(i) * (barHeight + spacing)
+            let rect = NSRect(x: barX, y: y, width: w, height: barHeight)
+            let path = NSBezierPath(roundedRect: rect, xRadius: 1, yRadius: 1)
+            path.fill()
+        }
+
+        image.unlockFocus()
+        image.isTemplate = true
+        return image
     }
 
     private func makeFallbackImage() -> NSImage {
