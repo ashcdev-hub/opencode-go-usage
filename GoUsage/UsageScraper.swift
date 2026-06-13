@@ -47,89 +47,14 @@ class UsageScraper: ObservableObject {
     })()
     """
 
-    static let diagnosticJS = """
-    (function() {
-        var info = {};
-        info.url = window.location.href;
-        info.title = document.title;
-        info.bodyLength = document.body ? document.body.innerHTML.length : 0;
-
-        var slots = [];
-        document.querySelectorAll('[data-slot]').forEach(function(el) {
-            slots.push(el.tagName + '[data-slot="' + el.getAttribute('data-slot') + '"]:' + (el.innerText || '').substring(0, 60));
-        });
-        info.dataSlots = slots.slice(0, 50);
-
-        var pcts = [];
-        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        while (walker.nextNode()) {
-            var txt = walker.currentNode.textContent.trim();
-            if (txt.indexOf('%') !== -1 && txt.length < 80) {
-                var parent = walker.currentNode.parentElement;
-                var tag = parent ? parent.tagName + '.' + (parent.className || '').substring(0, 40) : '?';
-                pcts.push(tag + ' => "' + txt + '"');
-            }
-        }
-        info.pctTexts = pcts.slice(0, 30);
-
-        var progress = [];
-        document.querySelectorAll('[role="progressbar"], [aria-valuenow], progress').forEach(function(el) {
-            progress.push(el.tagName + ' aria-valuenow=' + el.getAttribute('aria-valuenow') + ' class=' + (el.className || '').substring(0, 50));
-        });
-        info.progressBars = progress.slice(0, 20);
-
-        var bodyChildren = [];
-        if (document.body) {
-            for (var i = 0; i < Math.min(document.body.children.length, 15); i++) {
-                var c = document.body.children[i];
-                bodyChildren.push(c.tagName + '#' + c.id + ' class=' + (c.className || '').substring(0, 60) + ' children=' + c.children.length);
-            }
-        }
-        info.bodyChildren = bodyChildren;
-
-        var main = document.querySelector('#__next') || document.querySelector('#root') || document.querySelector('#app') || document.querySelector('main');
-        if (main) {
-            var sub = [];
-            for (var j = 0; j < Math.min(main.children.length, 20); j++) {
-                var s = main.children[j];
-                sub.push(s.tagName + '#' + s.id + ' class=' + (s.className || '').substring(0, 60));
-            }
-            info.mainChildren = sub;
-            info.mainTag = main.tagName + '#' + main.id;
-            info.mainHTML = main.innerHTML.substring(0, 2000);
-        }
-
-        return JSON.stringify(info, null, 2);
-    })()
-    """
-
-    func dumpPageStructure(on webView: WKWebView) {
-        webView.evaluateJavaScript(UsageScraper.diagnosticJS) { result, error in
-            if let error = error {
-                print("=== DIAGNOSTIC: error: \(error.localizedDescription)")
-                return
-            }
-            if let str = result as? String {
-                print("=== DIAGNOSTIC START ===")
-                print(str)
-                print("=== DIAGNOSTIC END ===")
-            } else {
-                print("=== DIAGNOSTIC: unexpected result type: \(type(of: result))")
-            }
-        }
-    }
-
     func scrapeUsage(on webView: WKWebView, completion: ((Bool) -> Void)? = nil) {
         webView.evaluateJavaScript(UsageScraper.scraperJS) { [weak self] result, error in
-            print("=== scrapeUsage: JS returned: \(result ?? "nil"), error: \(error?.localizedDescription ?? "none")")
-
             guard error == nil,
                   let jsonString = result as? String,
                   !jsonString.isEmpty,
                   let data = jsonString.data(using: .utf8),
                   let items = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]],
                   !items.isEmpty else {
-                print("=== scrapeUsage: no valid items found")
                 completion?(false)
                 return
             }
@@ -144,13 +69,11 @@ class UsageScraper: ObservableObject {
 
             let hasRealData = meters.contains { !$0.label.isEmpty && $0.percentage >= 0 && !$0.resetTime.isEmpty }
             guard hasRealData else {
-                print("=== scrapeUsage: items found but all empty")
                 completion?(false)
                 return
             }
 
             DispatchQueue.main.async {
-                print("=== scrapeUsage: parsed \(meters.count) meters with real data")
                 self?.meters = meters
                 self?.isLoggedIn = true
                 self?.isLoading = false

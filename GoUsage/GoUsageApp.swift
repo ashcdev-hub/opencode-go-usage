@@ -17,7 +17,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     let scraper = UsageScraper()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("=== GoUsage: launching ===")
         NSApp.setActivationPolicy(.accessory)
         setupStatusItem()
         setupPopover()
@@ -27,8 +26,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         scraper.loadCachedMeters()
         loadWorkspace()
         startRefreshTimer()
-
-        print("=== GoUsage: status item created ===")
     }
 
     // MARK: - Status Item
@@ -49,8 +46,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         button.target = self
         button.action = #selector(statusItemClicked(_:))
         button.toolTip = "OpenCode GO Usage"
-
-        print("Button title: \(button.title), frame: \(button.frame)")
     }
 
     private func makeFallbackImage() -> NSImage {
@@ -127,7 +122,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 500, height: 700), configuration: config)
         webView.navigationDelegate = self
-        print("=== WKWebView created ===")
     }
 
     private func setupHiddenWebViewWindow() {
@@ -141,16 +135,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         window.contentView = webView
         window.orderOut(nil)
         hiddenWebViewWindow = window
-        print("=== Hidden webView window created ===")
     }
 
     func loadWorkspace() {
         guard webView != nil else {
-            print("=== loadWorkspace: webView nil, retrying in 0.5s")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in self?.loadWorkspace() }
             return
         }
-        print("=== Loading workspace URL: \(UsageScraper.workspaceURL.absoluteString)")
         hasRedirectedToWorkspace = false
         scrapeRetries = 0
         scraper.isLoading = true
@@ -166,19 +157,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
             return
         }
         if isAuthInProgress {
-            print("=== Manual refresh: auth in progress, ignoring")
             scraper.isRefreshing = false
             return
         }
         if let urlString = webView?.url?.absoluteString, isAuthPage(urlString) {
-            print("=== Manual refresh: on auth page — login required")
             scraper.isRefreshing = false
             scraper.isLoading = false
             scraper.isLoggedIn = false
             refreshPopover()
             return
         }
-        print("=== Manual refresh: full reload")
         scraper.isRefreshing = true
         scraper.isLoading = true
         loadWorkspace()
@@ -187,7 +175,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     func startRefreshTimer() {
         refreshTimer?.invalidate()
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
-            print("=== Refresh timer fired")
             self?.loadWorkspace()
         }
     }
@@ -196,26 +183,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let urlString = webView.url?.absoluteString ?? ""
-        print("=== didFinish: \(urlString)")
 
         if isAuthInProgress {
             if isOnWorkspace(urlString) {
                 handleAuthCompleted()
                 return
             } else if isAuthPage(urlString) {
-                print("=== Auth page detected — user can authenticate")
                 return
             }
         }
 
         if isOnWorkspace(urlString) {
-            print("=== Workspace page detected, scraping in \(Int(scrapeDelay))s...")
             scrapeRetries = 0
             DispatchQueue.main.asyncAfter(deadline: .now() + scrapeDelay) { [weak self] in
                 self?.attemptScrape()
             }
         } else if isAuthPage(urlString) {
-            print("=== Auth page detected")
             DispatchQueue.main.async { [weak self] in
                 self?.scraper.isLoggedIn = false
                 self?.scraper.isLoading = false
@@ -223,7 +206,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 self?.refreshPopover()
             }
         } else if !hasRedirectedToWorkspace {
-            print("=== Non-workspace page detected, redirecting to workspace...")
             hasRedirectedToWorkspace = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
                 self?.loadWorkspace()
@@ -232,15 +214,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("=== didFail: \(error.localizedDescription)")
         scraper.isLoading = false
         scraper.isRefreshing = false
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print("=== didFailProvisional: \(error.localizedDescription)")
         scraper.isLoading = false
-         scraper.isRefreshing = false
+        scraper.isRefreshing = false
     }
 
     private func isOnWorkspace(_ urlString: String) -> Bool {
@@ -258,7 +238,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
     private func attemptScrape() {
         if let urlString = webView?.url?.absoluteString, isAuthPage(urlString) {
-            print("=== scrape: on auth page, skipping — login required")
             DispatchQueue.main.async { [weak self] in
                 self?.scraper.isLoading = false
                 self?.scraper.isRefreshing = false
@@ -268,7 +247,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
             return
         }
         guard scrapeRetries < maxScrapeRetries else {
-            print("=== scrape: exhausted retries, giving up")
             DispatchQueue.main.async { [weak self] in
                 self?.scraper.isLoading = false
                 self?.scraper.isRefreshing = false
@@ -276,22 +254,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
             return
         }
         scrapeRetries += 1
-        if scrapeRetries == 1 {
-            scraper.dumpPageStructure(on: webView)
-        }
         let delay = min(1.0 + Double(scrapeRetries) * 0.5, 3.0)
-        print("=== scrape attempt \(scrapeRetries)/\(maxScrapeRetries) (retry interval: \(String(format: "%.1f", delay))s)")
 
         scraper.scrapeUsage(on: webView) { [weak self] success in
             if success {
-                print("=== scrape: success!")
                 DispatchQueue.main.async { [weak self] in
                     self?.scraper.isLoading = false
                     self?.scraper.isRefreshing = false
                     self?.refreshPopover()
                 }
             } else {
-                print("=== scrape: no valid data yet, retrying in \(String(format: "%.1f", delay))s...")
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     self?.attemptScrape()
                 }
@@ -302,11 +274,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     // MARK: - Auth
 
     func startAuth() {
-        guard !isAuthInProgress else {
-            print("=== auth already in progress")
-            return
-        }
-        print("=== startAuth called")
+        guard !isAuthInProgress else { return }
         isAuthInProgress = true
 
         hiddenWebViewWindow?.contentView = nil
@@ -324,7 +292,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     }
 
     func cancelAuth() {
-        print("=== cancelAuth called")
         webView.stopLoading()
         isAuthInProgress = false
         hiddenWebViewWindow?.contentView = webView
@@ -334,7 +301,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     }
 
     private func handleAuthCompleted() {
-        print("=== Auth completed — workspace detected")
         isAuthInProgress = false
         hiddenWebViewWindow?.contentView = webView
 
