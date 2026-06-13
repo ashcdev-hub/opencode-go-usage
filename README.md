@@ -142,24 +142,13 @@ The `project.yml` file keeps the project configuration in a single readable file
 
 1. Download the latest [Release](https://github.com/ashcdev-hub/opencode-go-usage/releases)
 2. Unzip and move `Opencode Go Usage.app` to your Applications folder
-3. On first launch, right-click the app → Open → click Open to bypass Gatekeeper
+3. When the security warning appears, go to **System Settings → Privacy & Security** → click **Open Anyway** next to the blocked app message
 
-### Gatekeeper (Unsigned App)
-
-The app is self-signed, so macOS Gatekeeper will block it on first launch. You have two options:
-
-**Option A — Remove quarantine flag (simplest):**
+The app is self-signed so macOS Gatekeeper will block it on first launch. Either follow the guidance above or remove the quarantine flag:
 
 ```bash
 xattr -d com.apple.quarantine /Applications/Opencode\ Go\ Usage.app
 ```
-
-**Option B — Bypass via System Settings:**
-
-1. Right-click `Opencode Go Usage.app` → select **Open**
-2. When the security warning appears, go to **System Settings → Privacy & Security** → click **Open Anyway** next to the blocked app message
-
-After launch, look for the GO icon in your menu bar.
 
 ### Building from Source
 
