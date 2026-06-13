@@ -16,6 +16,10 @@ Inspired by needing to easily view usage stats that I wasn't seeing in [Opencode
 - **Session persistence** — caches usage data locally so the popover shows meaningful data immediately on launch while the hidden web view re-authenticates
 - **Idle-friendly** — the hidden web view is torn down between scrapes so the app sits at near-baseline memory when you're not looking at it
 
+## Requirements
+
+- macOS 14.4+
+
 ## Installation
 
 ### Download
