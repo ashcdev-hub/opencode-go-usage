@@ -24,7 +24,7 @@ The app uses a hidden `WKWebView` to load your OpenCode GO workspace page in the
 │  NSStatusItem (menu bar "GO" button)        │
 │  └── NSPopover (click to open)              │
 │      └── MenuBarDropdown (SwiftUI)          │
-│          ├── UsageRow × 3 (Rolling/Weekly)  │
+│          ├── UsageRow × 3 (Rolling/Weekly/Monthly) │
 │          └── Footer (refresh/signout/quit)  │
 └─────────────────────────────────────────────┘
 
@@ -41,7 +41,7 @@ The app uses a hidden `WKWebView` to load your OpenCode GO workspace page in the
 1. **Launch** → cached usage is displayed immediately from `UserDefaults`
 2. **Hidden web view** loads the workspace URL and authenticates via shared cookies
 3. **`didFinish` delegate** fires after page load → 4 second delay → scrape attempts begin
-4. **JS scraper** (`UsageScraper.scraperJS`) queries the DOM for `data-slot="usage-item"` elements
+4. **JS scraper** (`UsageScraper.scraperJS`) queries the DOM for `data-slot="usage-preview-item"` elements (falls back to `data-slot="usage-item"`)
 5. **Parsed data** updates `@Published meters` → SwiftUI re-renders the popover
 6. **Auto-refresh timer** re-runs `loadWorkspace()` every 5 minutes
 
@@ -94,7 +94,7 @@ GoUsage/
 ## Key Design Decisions
 
 ### Why a hidden WKWebView?
-OpenCode GO uses cookie-based authentication. Rather than reimplementing auth, the app loads the real workspace page in a hidden web view that shares cookies with the system browser. This way, if the user is already logged in to OpenCode in Safari/Chrome, the hidden web view picks up the session automatically.
+OpenCode GO uses cookie-based authentication. Rather than reimplementing auth, the app loads the real workspace page in a hidden web view that shares cookies with Safari. This way, if the user is already logged in to OpenCode in Safari, the hidden web view picks up the session automatically.
 
 ### Why JS scraping?
 The OpenCode GO workspace page is a server-rendered web app. The usage data lives in the DOM with semantic `data-slot` attributes, making it reliable to scrape with `document.querySelectorAll`. No API key or OAuth flow needed.
@@ -184,6 +184,8 @@ refreshTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { ... 
 Value is in seconds (300 = 5 minutes).
 
 ### Adjusting Scrape Timing
+
+In `GoUsageApp.swift`:
 
 - `scrapeDelay`: Initial delay before first scrape attempt after page load (default: 4 seconds). Only applies to auto-refresh and initial load — manual refresh skips this and scrapes immediately.
 - `maxScrapeRetries`: Maximum number of scrape attempts (default: 20)
