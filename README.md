@@ -24,7 +24,7 @@ The app uses a hidden `WKWebView` to load your OpenCode GO workspace page in the
 │  NSStatusItem (menu bar "GO" button)        │
 │  └── NSPopover (click to open)              │
 │      └── MenuBarDropdown (SwiftUI)          │
-│          ├── UsageRow × 3 (Rolling/Weekly/Monthly) │
+│          ├── Usage (Rolling/Weekly/Monthly) │
 │          └── Footer (refresh/signout/quit)  │
 └─────────────────────────────────────────────┘
 
