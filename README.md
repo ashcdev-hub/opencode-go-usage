@@ -1,6 +1,6 @@
 # Opencode Go Usage
 
-A macOS menu bar app that displays your [OpenCode GO](https://opencode.ai) subscription usage in real time. Rolling, weekly, and monthly limits with progress bars, no more checking a browser tab to see when your limits reset.
+A lightweight macOS menu bar app that displays your [OpenCode GO](https://opencode.ai) subscription usage in real time. Rolling, weekly, and monthly limits with progress bars, no more checking a browser tab to see when your limits reset.
 
 ## Features
 
