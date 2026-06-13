@@ -84,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         popover = NSPopover()
         popover.contentSize = NSSize(width: 320, height: 200)
         popover.behavior = .transient
-        popover.animates = true
+        popover.animates = false
         updatePopoverContent()
     }
 

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0466B81C0F1AE38190337ED8 /* GoUsageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DDCB78C837D18BBA151ACF /* GoUsageApp.swift */; };
 		10A558C11852C652928E2F46 /* MenuBarDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F7BEEA9F0E06FFAC206ACF /* MenuBarDropdown.swift */; };
-
 		3C1954A408FAC13918493086 /* UsageScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C6D723D1577C3E6080F74 /* UsageScraper.swift */; };
 		762E768BA02B3F706838DCE6 /* UsageMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863C50D050EAB886B7EE6F69 /* UsageMeter.swift */; };
 		7A0B588CD40225385B1C9930 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 848890CC9AA5BBB5F5E02FF4 /* Assets.xcassets */; };

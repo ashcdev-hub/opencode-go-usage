@@ -202,7 +202,7 @@ struct UsageRow: View {
             Text(meter.resetTime)
                 .font(.caption2)
                 .foregroundColor(.secondary)
-                .frame(width: 85, alignment: .trailing)
+                .frame(width: 85, alignment: .leading)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
