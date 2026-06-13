@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     private let scrapeDelay: TimeInterval = 4.0
     private var hasRedirectedToWorkspace = false
     private var isAuthInProgress = false
+    private var isManualRefresh = false
 
     let scraper = UsageScraper()
 
@@ -169,6 +170,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         }
         scraper.isRefreshing = true
         scraper.isLoading = true
+        isManualRefresh = true
         loadWorkspace()
     }
 
@@ -195,8 +197,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
         if isOnWorkspace(urlString) {
             scrapeRetries = 0
-            DispatchQueue.main.asyncAfter(deadline: .now() + scrapeDelay) { [weak self] in
-                self?.attemptScrape()
+            if isManualRefresh {
+                isManualRefresh = false
+                attemptScrape()
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + scrapeDelay) { [weak self] in
+                    self?.attemptScrape()
+                }
             }
         } else if isAuthPage(urlString) {
             DispatchQueue.main.async { [weak self] in

@@ -9,7 +9,7 @@ Originally inspired by needing to display the usage stats that [Opencode Stats](
 - **Menu bar indicator** — shows a "GO" status item with a chart icon in your menu bar
 - **Live usage data** — scrapes your OpenCode GO workspace page to display rolling, weekly, and monthly usage percentages with progress bars
 - **Auto-refresh** — data refreshes automatically every 5 minutes
-- **Manual refresh** — click the refresh button in the popover to pull the latest data instantly
+- **Manual refresh** — click the refresh button for an instant (~1s) data refresh
 - **Background operation** — runs as an `LSUIElement` (no Dock icon), purely menu bar–based
 - **Session persistence** — caches usage data locally so the popover shows meaningful data immediately on launch while the hidden web view re-authenticates
 
@@ -185,7 +185,7 @@ Value is in seconds (300 = 5 minutes).
 
 ### Adjusting Scrape Timing
 
-- `scrapeDelay`: Initial delay before first scrape attempt after page load (default: 4 seconds)
+- `scrapeDelay`: Initial delay before first scrape attempt after page load (default: 4 seconds). Only applies to auto-refresh and initial load — manual refresh skips this and scrapes immediately.
 - `maxScrapeRetries`: Maximum number of scrape attempts (default: 20)
 - Retry backoff: starts at 1.5s, increases by 0.5s each attempt, caps at 3.0s
 
