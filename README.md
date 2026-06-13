@@ -1,6 +1,10 @@
 # Opencode Go Usage
 
+**Author:** Ash Eskrett
+
 A lightweight macOS menu bar app that displays your [OpenCode GO](https://opencode.ai) subscription usage in real time. Rolling, weekly, and monthly limits with progress bars, no more checking a browser tab to see when your limits reset.
+
+![App Screenshot](docs/screenshot.png)
 
 ## Features
 
@@ -103,9 +107,34 @@ The app needs access to shared `WKWebsiteDataStore` cookies for authentication. 
 ### Why XcodeGen?
 The `project.yml` file keeps the project configuration in a single readable file, avoiding merge conflicts on `.pbxproj` files and making it easy to regenerate the Xcode project.
 
-## Getting Started
+## Installation
 
-### Prerequisites
+### Download
+
+1. Download `OpencodeGoUsage-v0.1.zip` from [Releases](https://github.com/ashcdev-hub/opencode-go-usage/releases)
+2. Unzip and move `Opencode Go Usage.app` to your Applications folder
+
+### Gatekeeper (Unsigned App)
+
+The app is self-signed, so macOS Gatekeeper will block it on first launch. You have two options:
+
+**Option A — Remove quarantine flag (simplest):**
+
+```bash
+xattr -d com.apple.quarantine /Applications/Opencode\ Go\ Usage.app
+```
+
+**Option B — Bypass via System Settings:**
+
+1. Right-click `Opencode Go Usage.app` → select **Open**
+2. When the security warning appears, click **Open**
+3. Alternatively: go to **System Settings → Privacy & Security** → click **Open Anyway** next to the blocked app message
+
+The app runs as a menu bar agent (no Dock icon). After launch, look for the GO icon in your menu bar.
+
+### Building from Source
+
+#### Prerequisites
 
 - macOS 14.4+
 - Xcode 15+
@@ -182,3 +211,7 @@ Value is in seconds (300 = 5 minutes).
 ## License
 
 MIT
+
+## Author
+
+Ash Eskrett
