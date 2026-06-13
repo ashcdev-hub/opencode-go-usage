@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/
+*.xcuserstate
+DerivedData/
+build/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+
+# App artifacts
+*.app
+*.ipa
+*.dSYM.zip
+*.dSYM

@@ -1,0 +1,28 @@
+name: OpencodeGoUsage
+options:
+  bundleIdPrefix: com.opencode
+  deploymentTarget:
+    macOS: "14.4"
+  xcodeVersion: "15.0"
+  createIntermediateGroups: true
+
+targets:
+  OpencodeGoUsage:
+    type: application
+    platform: macOS
+    sources:
+      - GoUsage
+    settings:
+      base:
+        INFOPLIST_FILE: GoUsage/Info.plist
+        CODE_SIGN_ENTITLEMENTS: GoUsage/GoUsage.entitlements
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_APP_SANDBOX: NO
+        PRODUCT_BUNDLE_IDENTIFIER: com.opencode.go-usage
+        PRODUCT_NAME: "Opencode Go Usage"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.4"
+        ASSETCATALOG_COMPILER_APPICON_NAME: "AppIcon"
