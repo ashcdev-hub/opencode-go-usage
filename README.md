@@ -16,6 +16,20 @@ Inspired by needing to easily view usage stats that I wasn't seeing in [Opencode
 - **Session persistence** — caches usage data locally so the popover shows meaningful data immediately on launch while the hidden web view re-authenticates
 - **Idle-friendly** — the hidden web view is torn down between scrapes so the app sits at near-baseline memory when you're not looking at it
 
+## Installation
+
+### Download
+
+1. Download the latest [Release](https://github.com/ashcdev-hub/opencode-go-usage/releases)
+2. Unzip and move `Opencode Go Usage.app` to your Applications folder
+3. When the security warning appears, go to **System Settings → Privacy & Security** → click **Open Anyway** next to the blocked app message
+
+The app is self-signed so macOS Gatekeeper will block it on first launch. Either follow the guidance above or remove the quarantine flag:
+
+```bash
+xattr -d com.apple.quarantine /Applications/Opencode\ Go\ Usage.app
+```
+
 ## How It Works
 
 The app uses two `WKWebView`s that share the same `WKWebsiteDataStore.default()` cookie jar:
@@ -135,20 +149,6 @@ The app needs access to shared `WKWebsiteDataStore` cookies for authentication. 
 
 ### Why XcodeGen?
 The `project.yml` file keeps the project configuration in a single readable file, avoiding merge conflicts on `.pbxproj` files and making it easy to regenerate the Xcode project.
-
-## Installation
-
-### Download
-
-1. Download the latest [Release](https://github.com/ashcdev-hub/opencode-go-usage/releases)
-2. Unzip and move `Opencode Go Usage.app` to your Applications folder
-3. When the security warning appears, go to **System Settings → Privacy & Security** → click **Open Anyway** next to the blocked app message
-
-The app is self-signed so macOS Gatekeeper will block it on first launch. Either follow the guidance above or remove the quarantine flag:
-
-```bash
-xattr -d com.apple.quarantine /Applications/Opencode\ Go\ Usage.app
-```
 
 ### Building from Source
 
