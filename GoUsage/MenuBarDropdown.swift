@@ -3,21 +3,23 @@ import WebKit
 
 struct MenuBarDropdown: View {
     @ObservedObject var scraper: UsageScraper
-    var webView: WKWebView?
+    @ObservedObject var authState: AuthState
     var onSignIn: () -> Void = {}
     var onCancelAuth: () -> Void = {}
     var onRefresh: () -> Void = {}
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if let webView = webView {
+            if let webView = authState.authWebView {
                 authView(webView: webView)
-            } else if scraper.meters.isEmpty && !scraper.isLoggedIn {
-                notLoggedInView
-            } else if scraper.meters.isEmpty && scraper.isLoading {
-                loadingView
             } else if scraper.meters.isEmpty {
-                emptyView
+                if !scraper.isLoggedIn {
+                    notLoggedInView
+                } else if scraper.isLoading {
+                    loadingView
+                } else {
+                    emptyView
+                }
             } else {
                 usageView
             }
@@ -109,27 +111,27 @@ struct MenuBarDropdown: View {
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(.primary.opacity(0.6))
                 if let date = scraper.lastUpdated {
-                    Text("Updated \(date, style: .relative) ago")
-                        .font(.system(size: 9))
-                        .foregroundColor(.secondary)
+                    RelativeUpdatedText(date: date)
                 }
             }
             Spacer()
             HStack(spacing: 12) {
-                Button(action: {
-                    onRefresh()
-                }) {
-                    if scraper.isRefreshing {
-                        ProgressView()
-                            .controlSize(.mini)
-                    } else {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 11))
+                if authState.authWebView == nil {
+                    Button(action: {
+                        onRefresh()
+                    }) {
+                        if scraper.isRefreshing {
+                            ProgressView()
+                                .controlSize(.mini)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 11))
+                        }
                     }
+                    .buttonStyle(.borderless)
+                    .help("Refresh usage data")
+                    .disabled(scraper.isRefreshing)
                 }
-                .buttonStyle(.borderless)
-                .help("Refresh usage data")
-                .disabled(scraper.isRefreshing)
 
                 Button(action: {
                     scraper.clearCookies()
@@ -152,6 +154,15 @@ struct MenuBarDropdown: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
+    }
+}
+
+private struct RelativeUpdatedText: View {
+    let date: Date
+    var body: some View {
+        Text("Updated \(date, style: .relative) ago")
+            .font(.system(size: 9))
+            .foregroundColor(.secondary)
     }
 }
 

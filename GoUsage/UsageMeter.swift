@@ -1,7 +1,7 @@
 import Foundation
 
 struct UsageMeter: Identifiable {
-    let id = UUID()
+    var id: String { label }
     let label: String
     let percentage: Int
     let resetTime: String
@@ -13,9 +13,5 @@ struct UsageMeter: Identifiable {
         case "Monthly Usage": return "Monthly"
         default: return label
         }
-    }
-
-    var displayLine: String {
-        "\(shortLabel.padding(toLength: 8, withPad: " ", startingAt: 0)) \(percentage)%  \(resetTime)"
     }
 }
