@@ -33,10 +33,9 @@ xattr -d com.apple.quarantine /Applications/Opencode\ Go\ Usage.app
 **Option B — Bypass via System Settings:**
 
 1. Right-click `Opencode Go Usage.app` → select **Open**
-2. When the security warning appears, click **Open**
-3. Alternatively: go to **System Settings → Privacy & Security** → click **Open Anyway** next to the blocked app message
+2. When the security warning appears, go to **System Settings → Privacy & Security** → click **Open Anyway** next to the blocked app message
 
-The app runs as a menu bar agent (no Dock icon). After launch, look for the GO icon in your menu bar.
+After launch, look for the GO icon in your menu bar.
 
 ### Building from Source
 
