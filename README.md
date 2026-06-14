@@ -7,8 +7,6 @@ Inspired by needing to easily view usage stats that I wasn't seeing in [Opencode
 ## Features
 
 - **Menu bar indicator** — shows a "GO" status item with a chart icon in your menu bar
-- **Right-click context menu** — right-click the menu bar icon for About, Sign Out, and Quit
-- **About window** — app info, copyright, MIT license, and link to the GitHub repo
 - **Live usage data** — scrapes your OpenCode GO workspace page to display rolling, weekly, and monthly usage percentages with progress bars
 - **Auto-refresh** — data refreshes automatically every 5 minutes (when logged in and idle)
 - **Manual refresh** — click the refresh button for an instant (~1s) data refresh
@@ -16,6 +14,7 @@ Inspired by needing to easily view usage stats that I wasn't seeing in [Opencode
 - **Session persistence** — caches usage data locally so the popover shows meaningful data immediately on launch while the hidden web view re-authenticates
 - **Idle-friendly** — the hidden web view is torn down between scrapes so the app sits at near-baseline memory when you're not looking at it
 - **Snappy sign-in** — the popover shows a loading spinner throughout the auth flow and renders progress bars within ~2–3 s of completing sign-in
+- **Right-click context menu** — right-click the menu bar icon for About, Sign Out, and Quit
 
 ## Requirements
 
