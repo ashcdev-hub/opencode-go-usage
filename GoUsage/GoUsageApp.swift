@@ -338,7 +338,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     func startAuth() {
         guard !authState.isAuthInProgress else { return }
         authState.isAuthInProgress = true
-        scraper.isLoading = false
+        scraper.isLoading = true
+        scraper.isLoggedIn = true
 
         if authWebView == nil {
             authWebView = makeWebView()
@@ -357,6 +358,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         authWebView?.stopLoading()
         authState.isAuthInProgress = false
         authState.authWebView = nil
+        scraper.isLoggedIn = false
+        scraper.isLoading = false
         scheduleAuthTeardown()
     }
 
@@ -364,11 +367,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         authState.isAuthInProgress = false
         authState.authWebView = nil
         scheduleAuthTeardown()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self else { return }
-            self.scraper.isLoading = true
-            self.loadWorkspace()
-        }
+        scraper.isLoading = true
+        isManualRefresh = true
+        loadWorkspace()
     }
 
     // MARK: - Popover

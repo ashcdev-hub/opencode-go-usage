@@ -13,10 +13,10 @@ struct MenuBarDropdown: View {
             if let webView = authState.authWebView {
                 authView(webView: webView)
             } else if scraper.meters.isEmpty {
-                if !scraper.isLoggedIn {
-                    notLoggedInView
-                } else if scraper.isLoading {
+                if scraper.isLoading {
                     loadingView
+                } else if !scraper.isLoggedIn {
+                    notLoggedInView
                 } else {
                     emptyView
                 }
