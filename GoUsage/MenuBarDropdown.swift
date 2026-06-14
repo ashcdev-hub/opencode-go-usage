@@ -28,7 +28,7 @@ struct MenuBarDropdown: View {
 
             footerView
         }
-        .frame(width: 320)
+        .frame(width: authState.authWebView != nil ? 420 : 320)
     }
 
     private var notLoggedInView: some View {
@@ -70,7 +70,7 @@ struct MenuBarDropdown: View {
             .padding(.top, 8)
 
             AuthWebViewContainer(webView: webView)
-                .frame(height: 360)
+                .frame(height: 500)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
                 .overlay(
                     RoundedRectangle(cornerRadius: 6)
