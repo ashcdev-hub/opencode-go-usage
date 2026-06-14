@@ -6,7 +6,6 @@ Inspired by needing to easily view usage stats that I wasn't seeing in [Opencode
 
 ## Features
 
-- **Menu bar indicator** — shows a "GO" status item with a chart icon in your menu bar
 - **Live usage data** — scrapes your OpenCode GO workspace page to display rolling, weekly, monthly usage percentages with progress bars and time to reset counters.
 - **Auto-refresh** — data refreshes automatically every 5 minutes (when logged in and idle)
 - **Manual refresh** — click the refresh button for an instant (~1s) data refresh
