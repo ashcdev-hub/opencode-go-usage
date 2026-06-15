@@ -32,66 +32,6 @@ The app is self-signed so macOS Gatekeeper will block it on first launch. Either
 ```bash
 xattr -d com.apple.quarantine /Applications/Opencode\ Go\ Usage.app
 ```
-## Project Structure
-
-```
-GoUsage/
-├── GoUsage/
-│   ├── GoUsageApp.swift        # App entry, AppDelegate, AuthState, webview lifecycle
-│   ├── MenuBarDropdown.swift    # SwiftUI popover UI, NSHostingController content
-│   ├── UsageScraper.swift       # JS scraping logic, data model, cache management
-│   ├── UsageMeter.swift         # UsageMeter data model (stable id by label)
-│   ├── Info.plist               # App config (LSUIElement)
-│   ├── GoUsage.entitlements     # Entitlements (sandbox disabled)
-│   └── Assets.xcassets/         # App icon assets
-├── OpencodeGoUsage.xcodeproj/   # Generated Xcode project
-├── project.yml                  # XcodeGen project specification
-├── LICENSE                      # MIT License
-└── README.md
-```
-
-### Building from Source
-
-#### Prerequisites
-
-- macOS 14.4+
-- Xcode 15+
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen) (for regenerating the Xcode project)
-
-### Build
-
-```bash
-# Install XcodeGen if needed
-brew install xcodegen
-
-# Generate the Xcode project
-cd GoUsage
-xcodegen generate
-
-# Open in Xcode
-open OpencodeGoUsage.xcodeproj
-```
-
-Then build and run from Xcode.
-
-### Build via CLI
-
-```bash
-xcodebuild -project OpencodeGoUsage.xcodeproj \
-           -scheme OpencodeGoUsage \
-           -configuration Release \
-           build
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Make your changes
-4. Build and test on macOS 14.4+
-5. Commit your changes (`git commit -m 'Add my feature'`)
-6. Push to the branch (`git push origin feature/my-feature`)
-7. Open a Pull Request
 
 ## License
 
